@@ -1,0 +1,21 @@
+// Import the functions you need from the SDKs you need
+import { getAnalytics } from "firebase/analytics";
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyA8B98KHBxI1d7cVtZlGchWIXZuRGxAMZQ",
+  authDomain: "vsb-literature-club.firebaseapp.com",
+  projectId: "vsb-literature-club",
+  storageBucket: "vsb-literature-club.firebasestorage.app",
+  messagingSenderId: "338232821497",
+  appId: "1:338232821497:web:420af3a2a338292d184428",
+  measurementId: "G-6KG7F7CS2M"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);

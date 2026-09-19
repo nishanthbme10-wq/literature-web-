@@ -1,0 +1,151 @@
+{
+  "entities": {
+    "Workshop": {
+      "title": "Workshop",
+      "description": "Literary workshop or seminar hosted by the club",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "topic": { "type": "string" },
+        "description": { "type": "string" },
+        "date": { "type": "string" },
+        "time": { "type": "string" },
+        "venue": { "type": "string" },
+        "speaker": { "type": "string" },
+        "googleFormUrl": { "type": "string" },
+        "googleSheetUrl": { "type": "string" },
+        "status": { "type": "string", "enum": ["Open", "Upcoming", "Completed", "Cancelled"] },
+        "category": { "type": "string" },
+        "registeredCount": { "type": "number" },
+        "posterUrl": { "type": "string" },
+        "maxSeats": { "type": "number" }
+      },
+      "required": ["id", "title", "date", "status"]
+    },
+    "Winner": {
+      "title": "Winner",
+      "description": "Monthly contest or event winner",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "department": { "type": "string" },
+        "year": { "type": "string" },
+        "eventName": { "type": "string" },
+        "achievementTitle": { "type": "string" },
+        "prize": { "type": "string" },
+        "monthYear": { "type": "string" },
+        "certificateIssued": { "type": "boolean" },
+        "certId": { "type": "string" },
+        "photoUrl": { "type": "string" }
+      },
+      "required": ["id", "name", "eventName", "monthYear"]
+    },
+    "GalleryItem": {
+      "title": "GalleryItem",
+      "description": "Event photograph in gallery",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "album": { "type": "string" },
+        "eventName": { "type": "string" },
+        "date": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "description": { "type": "string" },
+        "uploadedBy": { "type": "string" }
+      },
+      "required": ["id", "imageUrl", "title"]
+    },
+    "User": {
+      "title": "User",
+      "description": "Club user or admin profile",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "fullName": { "type": "string" },
+        "username": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "department": { "type": "string" },
+        "year": { "type": "string" },
+        "section": { "type": "string" },
+        "role": { "type": "string", "enum": ["student", "coordinator", "admin"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "fullName", "email", "role"]
+    },
+    "AttendanceRecord": {
+      "title": "AttendanceRecord",
+      "description": "Student attendance record for a workshop",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workshopId": { "type": "string" },
+        "workshopTitle": { "type": "string" },
+        "studentId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "department": { "type": "string" },
+        "status": { "type": "string", "enum": ["Present", "Absent", "Excused"] },
+        "markedAt": { "type": "string" }
+      },
+      "required": ["id", "workshopId", "studentId", "status"]
+    },
+    "FeedbackSubmission": {
+      "title": "FeedbackSubmission",
+      "description": "Student workshop feedback",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "workshopId": { "type": "string" },
+        "studentId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "rating": { "type": "number" },
+        "comments": { "type": "string" },
+        "submittedAt": { "type": "string" }
+      },
+      "required": ["id", "workshopId", "studentId", "rating"]
+    },
+    "Certificate": {
+      "title": "Certificate",
+      "description": "Issued student certificate",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "certNumber": { "type": "string" },
+        "studentId": { "type": "string" },
+        "studentName": { "type": "string" },
+        "eventName": { "type": "string" },
+        "workshopTitle": { "type": "string" },
+        "issueDate": { "type": "string" },
+        "downloadUrl": { "type": "string" }
+      },
+      "required": ["id", "certNumber", "studentId"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "System audit log",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "operatorName": { "type": "string" },
+        "operatorRole": { "type": "string" },
+        "action": { "type": "string" },
+        "details": { "type": "string" }
+      },
+      "required": ["id", "timestamp", "action"]
+    }
+  },
+  "firestore": {
+    "workshops": { "schema": { "$ref": "#/entities/Workshop" }, "description": "Collection of workshops" },
+    "winners": { "schema": { "$ref": "#/entities/Winner" }, "description": "Collection of contest winners" },
+    "gallery": { "schema": { "$ref": "#/entities/GalleryItem" }, "description": "Collection of gallery photos" },
+    "users": { "schema": { "$ref": "#/entities/User" }, "description": "Collection of registered users" },
+    "attendance": { "schema": { "$ref": "#/entities/AttendanceRecord" }, "description": "Collection of attendance records" },
+    "feedback": { "schema": { "$ref": "#/entities/FeedbackSubmission" }, "description": "Collection of workshop feedback" },
+    "certificates": { "schema": { "$ref": "#/entities/Certificate" }, "description": "Collection of student certificates" },
+    "logs": { "schema": { "$ref": "#/entities/ActivityLog" }, "description": "Collection of audit logs" }
+  }
+}

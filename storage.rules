@@ -1,0 +1,41 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userDoc() {
+      return firestore.get(/databases/(default)/documents/users/$(request.auth.uid));
+    }
+
+    function isAdmin() {
+      return isSignedIn() && userDoc().data.role == 'admin' && userDoc().data.active == true;
+    }
+
+    function isCoordinator() {
+      return isSignedIn() && userDoc().data.role == 'coordinator' && userDoc().data.active == true;
+    }
+
+    // Public website assets can be read by everyone.
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if (isAdmin() || isCoordinator())
+        && request.resource.size < 10 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*|application/pdf');
+    }
+
+    // Private student/admin files must never be publicly readable.
+    match /private/{allPaths=**} {
+      allow read: if isSignedIn() && (isAdmin() || isCoordinator());
+      allow write: if isSignedIn() && (isAdmin() || isCoordinator())
+        && request.resource.size < 20 * 1024 * 1024;
+    }
+
+    match /{allPaths=**} {
+      allow read: if false;
+      allow write: if isAdmin()
+        && request.resource.size < 20 * 1024 * 1024;
+    }
+  }
+}

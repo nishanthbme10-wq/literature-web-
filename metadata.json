@@ -1,0 +1,6 @@
+{
+  "name": "Literature Club - VSB Engineering College",
+  "description": "Official Literature Club portal for VSB Engineering College featuring workshop management, role-based dashboards, e-certificate automation, attendance analytics, winners showcase, and bulk excel certificate downloads.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

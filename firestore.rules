@@ -1,0 +1,246 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function currentUser() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function isAdmin() {
+      return isSignedIn()
+        && currentUser().data.role == 'admin'
+        && currentUser().data.active == true;
+    }
+
+    function isCoordinator() {
+      return isSignedIn()
+        && currentUser().data.role == 'coordinator'
+        && currentUser().data.active == true;
+    }
+
+    function isStudent() {
+      return isSignedIn()
+        && currentUser().data.role == 'student'
+        && currentUser().data.active == true;
+    }
+
+    // Public CMS collections.
+    match /workshops/{workshopId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /winners/{winnerId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /gallery/{galleryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /announcements/{announcementId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /departments/{departmentId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /coordinators/{coordinatorId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+
+    // Coordinator applications contain no password and can be submitted publicly.
+    // Only admins can review or modify them.
+    match /coordinatorRequests/{requestId} {
+      allow create: if request.resource.data.status == 'Pending';
+      allow read, update, delete: if isAdmin();
+    }
+
+    // User profiles: a new browser user may only create a student profile.
+    // Role changes to admin/coordinator must happen through an authorized
+    // administrative/backend process, never from a student browser.
+    match /users/{userId} {
+      allow read: if isAdmin() || (isSignedIn() && request.auth.uid == userId) || (isCoordinator() && request.auth.uid == userId);
+
+      allow create: if isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.data.role == 'student'
+        && request.resource.data.active == true;
+
+      allow update: if isAdmin()
+        || (isSignedIn()
+          && request.auth.uid == userId
+          && resource.data.role == 'student'
+          && request.resource.data.role == resource.data.role
+          && request.resource.data.active == resource.data.active);
+
+      allow delete: if isAdmin();
+    }
+
+    // Coordinator-to-event assignment. Students never get access.
+    match /coordinatorAssignments/{assignmentId} {
+      allow read: if isAdmin() || (isCoordinator() && resource.data.coordinatorUid == request.auth.uid);
+      allow write: if isAdmin();
+    }
+
+    // Registration serial counters are only writable as part of a student
+    // registration transaction. A client may advance a counter by exactly one,
+    // preventing duplicate serials while keeping the counter hidden from reads.
+    match /registrationCounters/{counterId} {
+      allow read: if false;
+      allow create: if isStudent()
+        && request.resource.data.lastSerial == 1
+        && request.resource.data.academicYear is string
+        && request.resource.data.departmentCode is string
+        && request.resource.data.eventCode is string;
+      allow update: if isStudent()
+        && request.resource.data.lastSerial == resource.data.lastSerial + 1
+        && request.resource.data.academicYear == resource.data.academicYear
+        && request.resource.data.departmentCode == resource.data.departmentCode
+        && request.resource.data.eventCode == resource.data.eventCode;
+      allow delete: if false;
+    }
+
+    // Registrations are private. Students can read/create only their own data;
+    // admins have full access; coordinators are constrained further in Phase 5
+    // when event assignments are introduced.
+    function isAssignedCoordinatorForEvent(eventId) {
+      return isAdmin() || (isCoordinator()
+        && exists(/databases/$(database)/documents/coordinatorAssignments/$(request.auth.uid + '_' + eventId))
+        && get(/databases/$(database)/documents/coordinatorAssignments/$(request.auth.uid + '_' + eventId)).data.active == true);
+    }
+
+    match /registrations/{registrationId} {
+      allow read: if isAdmin()
+        || (isStudent() && resource.data.studentUid == request.auth.uid)
+        || (isCoordinator() && isAssignedCoordinatorForEvent(resource.data.eventId));
+
+      // Students can create only their own registered record. Phase 7 will add
+      // the trusted serial allocator and server-authoritative capacity check.
+      allow create: if isStudent()
+        && request.resource.data.studentUid == request.auth.uid
+        && request.resource.data.email == request.auth.token.email
+        && request.resource.data.registrationStatus == 'registered'
+        && request.resource.data.attendanceStatus == 'not_marked'
+        && request.resource.data.coordinatorVisible == true
+        && request.resource.data.eventId is string
+        && request.resource.data.departmentCode is string
+        && request.resource.data.eventCode is string
+        && request.resource.data.academicYear is string
+        && request.resource.data.registerNumber is string
+        && request.resource.data.registrationId.matches('LC[0-9]{2}-[A-Z0-9]+-[A-Z0-9]+-[0-9]{3,}')
+        && request.resource.data.serial is int
+        && request.resource.data.serial >= 1
+        && get(/databases/$(database)/documents/events/$(request.resource.data.eventId)).exists()
+        && request.resource.data.departmentCode in get(/databases/$(database)/documents/events/$(request.resource.data.eventId)).data.eligibleDepartments
+        && getAfter(/databases/$(database)/documents/registrationCounters/$(request.resource.data.academicYear + '_' + request.resource.data.departmentCode + '_' + request.resource.data.eventCode)).data.lastSerial == request.resource.data.serial;
+
+      // Students may only cancel their own registration; identity/event and
+      // attendance fields cannot be changed by the student client.
+      allow update: if isAdmin()
+        || (isStudent()
+          && resource.data.studentUid == request.auth.uid
+          && request.resource.data.studentUid == resource.data.studentUid
+          && request.resource.data.eventId == resource.data.eventId
+          && request.resource.data.registrationId == resource.data.registrationId
+          && request.resource.data.eventCode == resource.data.eventCode
+          && request.resource.data.departmentCode == resource.data.departmentCode
+          && request.resource.data.attendanceStatus == resource.data.attendanceStatus
+          && request.resource.data.registrationStatus == 'cancelled'
+          && request.resource.data.email == resource.data.email
+          && request.resource.data.registerNumber == resource.data.registerNumber
+          && request.resource.data.departmentCode == resource.data.departmentCode
+          && request.resource.data.serial == resource.data.serial);
+      allow delete: if isAdmin();
+    }
+
+    // Attendance is private and writable only by authorized staff.
+    // QR token index: coordinators can resolve a scanned token only when it belongs
+    // to an event assigned to them. Students do not get access to this index.
+    match /qrTokens/{tokenId} {
+      allow read: if isAdmin()
+        || (isCoordinator()
+          && resource.data.active == true
+          && isAssignedCoordinatorForEvent(resource.data.eventId));
+      allow create: if isStudent()
+        && request.resource.data.studentUid == request.auth.uid
+        && request.resource.data.active == true;
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /attendance/{attendanceId} {
+      allow read: if isAdmin()
+        || (isStudent() && resource.data.studentUid == request.auth.uid)
+        || (isCoordinator() && isAssignedCoordinatorForEvent(resource.data.eventId));
+      allow create: if isAdmin()
+        || (isCoordinator()
+          && isAssignedCoordinatorForEvent(request.resource.data.eventId)
+          && request.resource.data.verificationMethod in ['qr', 'registration_id', 'register_number', 'manual']
+          && request.resource.data.attendanceStatus == 'present'
+          && request.resource.data.verifiedBy == request.auth.uid);
+      allow update: if isAdmin()
+        || (isCoordinator()
+          && isAssignedCoordinatorForEvent(resource.data.eventId)
+          && request.resource.data.eventId == resource.data.eventId
+          && request.resource.data.registrationId == resource.data.registrationId
+          && request.resource.data.studentUid == resource.data.studentUid
+          && request.resource.data.verifiedBy == request.auth.uid);
+      allow delete: if isAdmin();
+    }
+
+    match /feedback/{feedbackId} {
+      allow create: if isStudent();
+      allow read: if isAdmin() || isCoordinator();
+      allow update, delete: if isAdmin();
+    }
+
+    match /certificates/{certId} {
+      allow read: if isAdmin()
+        || isCoordinator()
+        || (isStudent() && resource.data.studentId == request.auth.uid);
+      allow write: if isAdmin() || isCoordinator();
+    }
+
+    match /logs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin() || isCoordinator();
+      allow update, delete: if isAdmin();
+    }
+
+    match /auditLogs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAdmin() || isCoordinator();
+      allow update, delete: if false;
+    }
+
+    match /inquiries/{inquiryId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin() || isCoordinator();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

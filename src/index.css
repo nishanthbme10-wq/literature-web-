@@ -1,0 +1,521 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+@import "tailwindcss";
+
+/* =========================================================
+   GLOBAL RESET
+========================================================= */
+
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   BASE
+========================================================= */
+
+@layer base {
+  html {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+
+    background-color: #FFFFFF;
+    color: #171717;
+
+    font-family: 'Plus Jakarta Sans', sans-serif;
+
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #root {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    display: block;
+    max-width: 100%;
+  }
+
+  img {
+    height: auto;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  button {
+    max-width: 100%;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  input,
+  textarea,
+  select {
+    max-width: 100%;
+  }
+}
+
+/* =========================================================
+   PREMIUM FONTS
+========================================================= */
+
+.font-serif-title {
+  font-family: 'Cinzel', serif;
+}
+
+.font-serif-body {
+  font-family: 'Playfair Display', serif;
+}
+
+.font-serif-elegant {
+  font-family:
+    'Cormorant Garamond',
+    'Playfair Display',
+    serif;
+}
+
+/* =========================================================
+   LUXURY GOLD GRADIENTS
+========================================================= */
+
+.gold-gradient-text {
+  background:
+    linear-gradient(
+      135deg,
+      #D4AF37 0%,
+      #C9A227 40%,
+      #A67C00 100%
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-gradient-bg {
+  background:
+    linear-gradient(
+      135deg,
+      #D4AF37 0%,
+      #C9A227 50%,
+      #A67C00 100%
+    );
+}
+
+.gold-gradient-subtle {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(212, 175, 55, 0.08) 0%,
+      rgba(245, 231, 168, 0.15) 50%,
+      rgba(201, 162, 39, 0.05) 100%
+    );
+}
+
+.gold-border {
+  border-color:
+    rgba(212, 175, 55, 0.28);
+}
+
+.gold-border-strong {
+  border-color: #D4AF37;
+}
+
+/* =========================================================
+   GOLD HOVER EFFECT
+========================================================= */
+
+.gold-glow-hover {
+  transition:
+    all 0.25s ease;
+}
+
+.gold-glow-hover:hover {
+  box-shadow:
+    0 4px 20px
+    rgba(212, 175, 55, 0.22);
+
+  border-color:
+    rgba(212, 175, 55, 0.55);
+}
+
+/* =========================================================
+   CARD SHADOWS
+========================================================= */
+
+.gold-card-shadow {
+  box-shadow:
+    0 4px 24px -2px
+    rgba(212, 175, 55, 0.08),
+
+    0 2px 8px -2px
+    rgba(0, 0, 0, 0.04);
+}
+
+.gold-card-shadow-hover {
+  transition:
+    all 0.3s
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    );
+}
+
+.gold-card-shadow-hover:hover {
+  transform:
+    translateY(-2px);
+
+  box-shadow:
+    0 10px 30px -4px
+    rgba(212, 175, 55, 0.18),
+
+    0 4px 12px -2px
+    rgba(0, 0, 0, 0.06);
+
+  border-color:
+    rgba(212, 175, 55, 0.45);
+}
+
+/* =========================================================
+   PREMIUM SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FAFAFA;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D4AF37;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #A67C00;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color:
+    #D4AF37
+    #FAFAFA;
+}
+
+/* =========================================================
+   FOCUS ACCESSIBILITY
+========================================================= */
+
+:focus-visible {
+  outline:
+    2px solid #A67C00;
+
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   MOBILE TAP POLISH
+========================================================= */
+
+button,
+a,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================================
+   RESPONSIVE CONTAINER
+========================================================= */
+
+.responsive-container {
+  width: 100%;
+  max-width: 1280px;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+@media (min-width: 640px) {
+  .responsive-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .responsive-container {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+}
+
+/* =========================================================
+   FLEX / GRID OVERFLOW PROTECTION
+========================================================= */
+
+.min-w-0 {
+  min-width: 0 !important;
+}
+
+.max-w-full {
+  max-width: 100% !important;
+}
+
+.break-anywhere {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* Long URLs should never push the layout */
+a,
+p,
+span,
+div,
+button,
+label {
+  overflow-wrap: break-word;
+}
+
+/* =========================================================
+   RESPONSIVE NAVIGATION
+========================================================= */
+
+.responsive-nav {
+  width: 100%;
+  max-width: 100%;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: thin;
+}
+
+.responsive-nav::-webkit-scrollbar {
+  height: 4px;
+}
+
+.responsive-nav > * {
+  min-width: max-content;
+}
+
+/* =========================================================
+   PAGE-WIDTH SAFETY
+========================================================= */
+
+.page-shell {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  overflow-x: hidden;
+}
+
+.full-width-safe {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* =========================================================
+   HEADER / NAVBAR SAFETY
+========================================================= */
+
+header,
+nav,
+main,
+section,
+footer {
+  max-width: 100%;
+}
+
+header > *,
+nav > *,
+main > *,
+section > *,
+footer > * {
+  min-width: 0;
+}
+
+/* =========================================================
+   MOBILE FONT SCALE
+========================================================= */
+
+@media (max-width: 640px) {
+  body {
+    font-size: 14px;
+  }
+
+  .font-serif-title {
+    letter-spacing: -0.01em;
+  }
+}
+
+/* =========================================================
+   SMALL DESKTOP WIDTH SAFETY
+========================================================= */
+
+@media (max-width: 1200px) {
+  .responsive-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 480px) {
+  .responsive-container {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
+
+/* =========================================================
+   SAFE AREA
+========================================================= */
+
+.safe-bottom {
+  padding-bottom:
+    env(safe-area-inset-bottom);
+}
+
+.safe-top {
+  padding-top:
+    env(safe-area-inset-top);
+}
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration:
+      0.01ms !important;
+
+    animation-iteration-count:
+      1 !important;
+
+    transition-duration:
+      0.01ms !important;
+
+    scroll-behavior:
+      auto !important;
+  }
+}
+
+/* =========================================================
+   GLOBAL IMAGE SAFETY
+========================================================= */
+
+img[alt] {
+  max-width: 100%;
+}
+
+/* Prevent broken / oversized external images */
+img {
+  object-position: center;
+}
+
+/* =========================================================
+   MODAL SAFETY
+========================================================= */
+
+.fixed {
+  max-width: 100vw;
+}
+
+/* =========================================================
+   TABLET / MOBILE WIDTH SAFETY
+========================================================= */
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-full-width {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print {
+  html,
+  body {
+    overflow: visible !important;
+    background: white !important;
+  }
+
+  * {
+    box-shadow: none !important;
+  }
+}
