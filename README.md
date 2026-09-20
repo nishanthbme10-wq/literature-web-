@@ -1,29 +1,124 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# 📚 VSB Literature Club
 
-# Run and deploy your AI Studio app
+### Literature Club Management & Event Registration Portal
 
-This contains everything you need to run your app locally.
+A modern, responsive web platform developed for the **Literature Club of V.S.B. Engineering College** to manage students, events, registrations, activities, announcements, and club-related information through a centralized digital portal.
 
-View your app in AI Studio: https://ai.studio/apps/fcebdefc-0906-4853-b70d-825ec474750e
+---
 
-## Run Locally
+## 🌐 Live Website
 
-**Prerequisites:**  Node.js
+🔗 https://vsb-literature-club.web.app/
 
+---
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 📖 About The Project
 
-## Current upgrade phase
+The **VSB Literature Club Portal** is a digital platform designed to simplify and manage the activities of the Literature Club of **V.S.B. Engineering College**.
 
-Phase 3 — Firestore Database Architecture is implemented in `STEP-3-FIRESTORE.md`.
+The system provides a centralized platform for students and coordinators to manage:
 
-## Current development phase
+- 👨‍🎓 Student accounts
+- 🔐 Authentication
+- 📅 Club events
+- 📝 Event registrations
+- 🎟️ Registration QR information
+- 📊 Student participation
+- 📢 Announcements
+- 📚 Literature club activities
+- 👨‍💼 Coordinator management
 
-Phase 7 implements transaction-safe department/event/year-scoped registration IDs. See `STEP-7-REGISTRATION-ID.md`.
-"# literature-web-" 
+The application is built using modern web technologies and Firebase cloud services.
+
+---
+
+## ✨ Features
+
+### 👨‍🎓 Student Features
+
+- Student registration
+- Student login
+- Secure authentication
+- Student profile management
+- Department, year and section details
+- Browse upcoming events
+- Online event registration
+- View registered events
+- Registration QR information
+- Participation tracking
+
+### 🎯 Event Management
+
+- Create events
+- Manage events
+- Display upcoming events
+- Event registration
+- Registration tracking
+- Student registration management
+
+### 👨‍💼 Coordinator Features
+
+- Coordinator login
+- Dashboard
+- Student management
+- Event management
+- Registration monitoring
+- Club activity management
+- Announcements management
+
+### 🔥 Firebase Features
+
+- Firebase Authentication
+- Cloud Firestore
+- Firebase Storage
+- Firebase Hosting
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|------------|---------|
+| ⚛️ React | Frontend |
+| 📘 TypeScript | Programming Language |
+| ⚡ Vite | Development & Build Tool |
+| 🎨 CSS | Styling |
+| 🔥 Firebase | Backend |
+| 🔐 Firebase Authentication | User Authentication |
+| 🗄️ Cloud Firestore | Database |
+| ☁️ Firebase Storage | File Storage |
+| 🌐 Firebase Hosting | Deployment |
+| 🐙 GitHub | Version Control |
+
+---
+
+## 🏗️ Project Architecture
+
+```text
+VSB Literature Club
+│
+├── Frontend
+│   ├── React
+│   ├── TypeScript
+│   ├── Components
+│   ├── Pages
+│   └── Routing
+│
+├── Firebase
+│   ├── Authentication
+│   ├── Cloud Firestore
+│   ├── Storage
+│   └── Hosting
+│
+├── Student Module
+│   ├── Registration
+│   ├── Login
+│   ├── Profile
+│   ├── Events
+│   └── Event Registration
+│
+└── Coordinator Module
+    ├── Dashboard
+    ├── Student Management
+    ├── Event Management
+    └── Activity Management
